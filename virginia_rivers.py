@@ -2,6 +2,7 @@ import requests
 import json
 import csv 
 from datetime import datetime
+import pandas as pd
 
 
 
@@ -36,43 +37,50 @@ current_datetime = datetime.now()
 current_datetime_formatted = current_datetime.strftime("%d-%b-%Y (%H:%M:%S.%f)")
 
 
-# 3. Create new csv data to it
-    
-# csvfile = open('/Users/ep9k/Desktop/va_river_monitor/river_levels.csv', 'a')
 
-# fieldnames = ['Time Stamp', 'South Fork Rivanna River', 'James River', 'Moormans River', 'Tye River', 'Piney River']
     
-# writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    
-# writer.writeheader()
-    
-# writer.writerow({
-#         'Time Stamp': current_datetime_formatted,
-#         'South Fork Rivanna River': rivanna_river_current_water_level,
-#         'James River': james_river_current_water_level,
-#         'Moormans River': moormans_river_current_water_level,
-#         'Tye River': tye_river_current_water_level,
-#         'Piney River': piney_river_current_water_level
-#         })
-    
-    
-# csvfile.close()
+# 3. Read CSV file
+va_river_data = pd.read_csv('river_levels.csv')
 
 
-# 4. Append data to existing file
+#remove extraneous column which is added as row index by pandas
+columns_to_drop = ['Unnamed: 0']
+va_river_data.drop(columns_to_drop, inplace=True, axis=1)
 
-with open (r'/Users/ep9k/Desktop/va_river_monitor/river_levels.csv', 'a') as csvfile:
+
+# 4. Evaluate current data
+if va_river_data['Time Stamp'].count() > 100:
+    va_river_data = va_river_data.drop(va_river_data.index[0])
+
+
+#write to dataframe
+va_river_data = va_river_data.append({'Time Stamp': current_datetime_formatted, 
+                                      'South Fork Rivanna River': rivanna_river_current_water_level,
+                                      'James River': james_river_current_water_level,
+                                      'Moormans River': moormans_river_current_water_level,
+                                      'Tye River': tye_river_current_water_level,
+                                      'Piney River': piney_river_current_water_level},
+                                     ignore_index=True)
+
+
+#convert columns to float from strings, then get mean value of column (average water level)
+#these averages are of the last 100 river level readings at each site
+va_river_data['South Fork Rivanna River'] = va_river_data['South Fork Rivanna River'].apply(float)
+rivanna_average_water_level = va_river_data['South Fork Rivanna River'].mean()
+va_river_data['James River'] = va_river_data['James River'].apply(float)
+james_average_water_level = va_river_data['James River'].mean()
+va_river_data['Moormans River'] = va_river_data['Moormans River'].apply(float)
+moormans_average_water_level = va_river_data['Moormans River'].mean()
+va_river_data['Tye River'] = va_river_data['Tye River'].apply(float)
+tye_average_water_level = va_river_data['Tye River'].mean()
+va_river_data['Piney River'] = va_river_data['Piney River'].apply(float)
+piney_average_water_level = va_river_data['Piney River'].mean()
+
+
+# 5. Write data back to csv file (overwrites existing file)
+va_river_data.to_csv('river_levels.csv')
     
-    writer = csv.writer(csvfile)
-    
-    writer.writerow([current_datetime_formatted,
-                      rivanna_river_current_water_level, 
-                      james_river_current_water_level, 
-                      moormans_river_current_water_level,
-                      tye_river_current_water_level, 
-                      piney_river_current_water_level])
-    
-    csvfile.close()
+
 
 
 
