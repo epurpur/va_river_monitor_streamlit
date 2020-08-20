@@ -67,14 +67,33 @@ va_river_data = va_river_data.append({'Time Stamp': current_datetime_formatted,
 #these averages are of the last 100 river level readings at each site
 va_river_data['South Fork Rivanna River'] = va_river_data['South Fork Rivanna River'].apply(float)
 rivanna_average_water_level = va_river_data['South Fork Rivanna River'].mean()
+rivanna_max_water_level = va_river_data['South Fork Rivanna River'].max()
+rivanna_min_water_level = va_river_data['South Fork Rivanna River'].min()
+
+
 va_river_data['James River'] = va_river_data['James River'].apply(float)
 james_average_water_level = va_river_data['James River'].mean()
+james_max_water_level = va_river_data['James River'].max()
+james_min_water_level = va_river_data['James River'].min()
+
 va_river_data['Moormans River'] = va_river_data['Moormans River'].apply(float)
 moormans_average_water_level = va_river_data['Moormans River'].mean()
+moormans_max_water_level = va_river_data['Moormans River'].max()
+moormans_min_water_level = va_river_data['Moormans River'].min()
+
+
 va_river_data['Tye River'] = va_river_data['Tye River'].apply(float)
 tye_average_water_level = va_river_data['Tye River'].mean()
+tye_max_water_level = va_river_data['Tye River'].max()
+tye_min_water_level = va_river_data['Tye River'].min()
+
+
 va_river_data['Piney River'] = va_river_data['Piney River'].apply(float)
 piney_average_water_level = va_river_data['Piney River'].mean()
+piney_max_water_level = va_river_data['Piney River'].max()
+piney_min_water_level = va_river_data['Piney River'].min()
+
+
 
 
 # 5. Write data back to csv file (overwrites existing file)
