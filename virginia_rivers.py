@@ -9,13 +9,15 @@ import pandas as pd
 
 # 1. Get API data for current water levels in each river. Data source seen in URL object
 
-site_numbers = {
-    'South Fork Rivanna River': '02032515',
-    'James River': '02025500',
-    'Moormans River': '02032250',
-    'Tye River': '02027000',
-    'Piney River': '02027500'
+site_info = {
+    'South Fork Rivanna River': ['02032515', 38.10180306, -78.4605666],
+    'James River': ['02025500', 37.5012508, -79.2625287],
+    'Moormans River': ['02032250', 38.1406902, -78.5558478],
+    'Tye River': ['02027000', 37.71541868, -78.981691],
+    'Piney River': ['02027500', 37.7023625, -79.0275254]
     }
+
+
 
 url = 'http://waterservices.usgs.gov/nwis/iv/?format=json&sites=02032515, 02025500, 02032250, 02027000, 02027500&parameterCd=00060,00065&siteStatus=all'
 

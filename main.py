@@ -8,6 +8,7 @@ Created on Wed Aug 19 21:06:26 2020
 
 import streamlit as st
 import pandas as pd
+import va_river_classes as vrc
 
 
 st.title("Central Virginia River Monitor")
