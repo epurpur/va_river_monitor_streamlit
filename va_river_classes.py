@@ -76,7 +76,7 @@ class RiverAPI():
         va_river_data = va_river_data.append(new_row, ignore_index=True)
 
         #write data to 'rivers_csv' file
-        # va_river_data.to_csv('river_levels.csv')
+        va_river_data.to_csv('river_levels.csv')
 
         return va_river_data
 

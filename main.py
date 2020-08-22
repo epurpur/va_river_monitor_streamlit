@@ -39,9 +39,9 @@ for river_name, site_number in river_site_info.items():
 va_river_data = RiverAPI.read_from_and_write_to_csv(current_data_list)
 
 
+#now make the plots in matplotlib
 counter = 1
 
-#now make the plots in matplotlib
 for river_name in river_site_info.keys():
 	
 	values = va_river_data[river_name].tolist()
