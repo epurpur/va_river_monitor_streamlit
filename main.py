@@ -7,8 +7,8 @@ Created on Wed Aug 19 21:06:26 2020
 """
 
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
+import concurrent.futures
 
 from va_river_classes import RiverAPI    #my own module
 
@@ -27,19 +27,16 @@ river_site_info = {
     }
 
 
-current_data_list = []
+with concurrent.futures.ThreadPoolExecutor() as executor:
+	result = executor.submit(RiverAPI.prep_current_water_data, river_site_info)
+	current_data_list = result.result()
 
-#iterate through sites and collect current water data
-for river_name, site_number in river_site_info.items():
-	data = RiverAPI(river_name, site_number)
-	current_water_level = data.get_current_water_level()
-	current_data_list.append(current_water_level)
 
 #write data to csv file
 va_river_data = RiverAPI.read_from_and_write_to_csv(current_data_list)
 
 
-#now make the plots in matplotlib
+# now make the plots in matplotlib
 counter = 1
 
 for river_name in river_site_info.keys():
@@ -52,21 +49,12 @@ for river_name in river_site_info.keys():
 
 	counter += 1
 
-	plt.title(river_name)
-	plt.axhline(y=sum(values)/len(values), color='red', linestyle="--", label='Average Water Level')
-	plt.legend()
-
-	plt.ylim(min(values) * .95, max(values) * 1.05)
-
-	plt.bar('Current Water Level', current_value)
-
-	plt.grid(axis='y', linestyle='-')
-
-	plt.subplots_adjust(left=0.1, right=0.6, top=0.9, bottom=0.1)
-	st.pyplot()    #makes the plot happen
+	ax = RiverAPI.make_plots(river_name, values)
+	ax.bar('Current River Level', current_value)
+	st.pyplot()
 
 
-	
+
 
 
 

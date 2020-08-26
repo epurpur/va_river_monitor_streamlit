@@ -4,6 +4,7 @@ import requests
 import json
 from datetime import datetime
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class RiverAPI():
@@ -28,6 +29,23 @@ class RiverAPI():
         
         return current_water_level
     
+
+    @staticmethod
+    def prep_current_water_data(river_site_info):
+        """Method used in multithreading process.
+        Takes in dictionary of river_site_info. Then creates RiverAPI instance.
+        Gets current water level for that instance and appends it to list. 
+        Returns entire list of data which is current water levels for all rivers."""
+
+        current_data_list = []
+
+        for river_name, site_number in river_site_info.items():
+            data = RiverAPI(river_name, site_number)
+            current_water_level = data.get_current_water_level()
+            current_data_list.append(current_water_level)
+
+        return current_data_list
+
 
     def get_historical_river_data(self):
         """Need to read 'river_levels.csv' in order to get historical stats for each river. 
@@ -79,6 +97,36 @@ class RiverAPI():
         va_river_data.to_csv('river_levels.csv')
 
         return va_river_data
+
+
+    @staticmethod
+    def make_plots(river_name, values):
+        """Makes plot for each river's current water level.
+        Min val is lowest recorded value of river. Max val is highest recorded value of river
+        Red line depicts median water level
+        Returns figure object, which is plotted in main module """
+
+        fig, ax = plt.subplots()
+
+        ax.set_title(river_name)
+        ax.set_ylabel('Cubic Feet per Second (cfs)')
+        ax.axhline(y=sum(values)/len(values), color='red', linestyle="--", label='Average Water Level')
+        ax.legend()
+
+        ax.set_ylim(min(values) * .95, max(values) * 1.05)
+
+        return ax
+
+
+
+
+
+
+
+
+
+
+
 
 
 
